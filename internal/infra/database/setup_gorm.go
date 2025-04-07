@@ -32,5 +32,5 @@ func SetupDB(config *env.Config) (*gorm.DB, error) {
 }
 
 func AutoMigrate(db *gorm.DB) error {
-	return db.AutoMigrate(&entities.User{}, &entities.Wallet{})
+	return db.AutoMigrate(&entities.User{}, &entities.Wallet{}, &entities.Transaction{}, &entities.Notification{})
 }

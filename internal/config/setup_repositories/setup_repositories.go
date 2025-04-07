@@ -10,11 +10,12 @@ func SetupRepositories(db *gorm.DB) (
 	*repositories.UserRepository,
 	*repositories.WalletRepository,
 	*repositories.TransactionRepository,
+	*repositories.NotificationRepository,
 ) {
 	fmt.Println("Configuring repositories...")
 	userRepository := NewUserRepository(db)
 	walletRepository := NewWalletRepository(db)
 	transactionRepository := NewTransactionRepository(db)
-
-	return userRepository, walletRepository, transactionRepository
+	notificationRepository := NewNotificationRepository(db)
+	return userRepository, walletRepository, transactionRepository, notificationRepository
 }

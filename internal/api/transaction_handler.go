@@ -33,13 +33,13 @@ func (h *TransactionHandler) Transaction(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
-
-	if err := h.validateTransactionRequest(req); err != nil {
+	err := h.validateTransactionRequest(req)
+	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
-	if err := h.TransactionUseCase.Execute(r.Context(), req.Payer, req.Payee, req.Value); err != nil {
+	err = h.TransactionUseCase.Execute(r.Context(), req.Payer, req.Payee, req.Value)
+	if err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}

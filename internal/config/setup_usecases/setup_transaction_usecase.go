@@ -6,11 +6,12 @@ import (
 	"go-transfer/internal/infra/repositories"
 )
 
-func SetupTransactionUseCases(
+func SetupTransactionUseCase(
 	userRepo *repositories.UserRepository,
 	walletRepo *repositories.WalletRepository,
 	transactionRepo *repositories.TransactionRepository,
+	notificationUseCase *usecase.NotificationUseCase,
 ) *usecase.Transaction {
 	fmt.Println("Configuring Transaction usecases...")
-	return usecase.NewTransaction(userRepo, walletRepo, transactionRepo)
+	return usecase.NewTransaction(userRepo, walletRepo, transactionRepo, notificationUseCase)
 }

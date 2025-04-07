@@ -3,29 +3,37 @@ package usecase
 import (
 	"context"
 	"errors"
+	"fmt"
 	"go-transfer/internal/domain/entities"
 	"go-transfer/internal/domain/port"
 )
 
 type Transaction struct {
-	userRepo        port.UserRepository
-	walletRepo      port.WalletRepository
-	TransactionRepo port.TransactionRepository
+	userRepo            port.UserRepository
+	walletRepo          port.WalletRepository
+	transactionRepo     port.TransactionRepository
+	notificationUseCase NotificationUseCase
 }
 
 func NewTransaction(
 	userRepo port.UserRepository,
 	walletRepo port.WalletRepository,
-	TransactionRepo port.TransactionRepository,
+	transactionRepo port.TransactionRepository,
+	notificationUseCase *NotificationUseCase,
 ) *Transaction {
 	return &Transaction{
-		userRepo:        userRepo,
-		walletRepo:      walletRepo,
-		TransactionRepo: TransactionRepo,
+		userRepo:            userRepo,
+		walletRepo:          walletRepo,
+		transactionRepo:     transactionRepo,
+		notificationUseCase: *notificationUseCase,
 	}
 }
 
 func (t *Transaction) Execute(ctx context.Context, senderID, receiverID int64, amount float64) error {
+	const isAuthorized = true
+	if !isAuthorized {
+		return errors.New("unauthorized")
+	}
 	if err := t.validateTransaction(ctx, senderID, receiverID, amount); err != nil {
 		return err
 	}
@@ -36,21 +44,25 @@ func (t *Transaction) Execute(ctx context.Context, senderID, receiverID int64, a
 		Amount:     amount,
 		Status:     entities.TransactionStatusPending,
 	}
-	TransactionId, err := t.TransactionRepo.Create(ctx, Transaction)
+	TransactionId, err := t.transactionRepo.Create(ctx, Transaction)
 	if err != nil {
 		return errors.New("failed to create Transaction record: " + err.Error())
 	}
 
-	if err := t.updateWallets(ctx, senderID, receiverID, amount); err != nil {
-		if err := t.TransactionRepo.UpdateStatus(ctx, TransactionId, entities.TransactionStatusFailed); err != nil {
-			return errors.New("failed to create Transaction record: " + err.Error())
+	err = t.updateWallets(ctx, senderID, receiverID, amount)
+	if err != nil {
+		if err := t.transactionRepo.UpdateStatus(ctx, TransactionId, entities.TransactionStatusFailed); err != nil {
+			return errors.New("failed to update failed Transaction status: " + err.Error())
 		}
 		return err
 	}
-	if err := t.TransactionRepo.UpdateStatus(ctx, TransactionId, entities.TransactionStatusCompleted); err != nil {
-		return errors.New("failed to create Transaction record: " + err.Error())
+	if err := t.transactionRepo.UpdateStatus(ctx, TransactionId, entities.TransactionStatusCompleted); err != nil {
+		return errors.New("failed to update completed Transaction status: " + err.Error())
 	}
-
+	err = t.notificationUseCase.Execute(ctx, senderID, receiverID, amount)
+	if err != nil {
+		fmt.Print("failed to send notification: " + err.Error())
+	}
 	return nil
 }
 
@@ -116,4 +128,8 @@ func (t *Transaction) updateWallets(ctx context.Context, senderID, receiverID in
 	}
 
 	return nil
+}
+
+func (t *Transaction) Notify(ctx context.Context, receiverID int64, amount float64) {
+
 }

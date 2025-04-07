@@ -6,7 +6,7 @@ import (
 	"go-transfer/internal/infra/repositories"
 )
 
-func SetupWalletUseCases(
+func SetupWalletUseCase(
 	walletRepo *repositories.WalletRepository,
 ) *usecase.Wallet {
 	fmt.Println("Configuring Wallet usecases...")

@@ -21,12 +21,13 @@ func Setup() {
 		log.Fatalf("Erro ao conectar no banco de dados: %v", err)
 	}
 
-	userRepository, walletRepository, transactionRepository := setup_repositories.SetupRepositories(db)
+	userRepository, walletRepository, transactionRepository, notificationRepository := setup_repositories.SetupRepositories(db)
 
 	userUseCase, walletUseCase, transactionUseCase := setup_usecases.SetupUseCases(
 		userRepository,
 		walletRepository,
 		transactionRepository,
+		notificationRepository,
 	)
 
 	userHandler, transactionHandler := handlers.SetupHandlers(userUseCase, walletUseCase, transactionUseCase)

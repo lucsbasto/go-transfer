@@ -6,7 +6,7 @@ import (
 	"go-transfer/internal/infra/repositories"
 )
 
-func SetupUserUseCases(
+func SetupUserUseCase(
 	userRepo *repositories.UserRepository,
 ) *usecase.User {
 	fmt.Println("Configuring User usecases...")
