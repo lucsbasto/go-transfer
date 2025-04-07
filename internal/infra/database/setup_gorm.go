@@ -3,14 +3,22 @@ package database
 import (
 	"fmt"
 	"go-transfer/internal/domain/entities"
+	"go-transfer/internal/env"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-func SetupDB() (*gorm.DB, error) {
+func SetupDB(config *env.Config) (*gorm.DB, error) {
 	fmt.Println("Connecting DB...")
 
-	dsn := "user=postgres password=postgres dbname=go-transfer sslmode=disable"
+	dsn := fmt.Sprintf(
+		"user=%s password=%s dbname=%s host=%s port=%s sslmode=disable",
+		config.DatabaseUser,
+		config.DatabasePassword,
+		config.DatabaseName,
+		config.DatabaseHost,
+		config.DatabasePort,
+	)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {

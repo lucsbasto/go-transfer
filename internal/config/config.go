@@ -6,16 +6,19 @@ import (
 	"go-transfer/internal/config/setup_repositories"
 	"go-transfer/internal/config/setup_routes"
 	"go-transfer/internal/config/setup_usecases"
+	"go-transfer/internal/env"
 	"go-transfer/internal/infra/database"
+	"log"
 )
 
 func Setup() {
 	fmt.Println("Init Setup ...")
 
-	db, err := database.SetupDB()
+	AppConfig := env.LoadEnv()
+
+	db, err := database.SetupDB(AppConfig)
 	if err != nil {
-		fmt.Println("Error connecting database:", err)
-		return
+		log.Fatalf("Erro ao conectar no banco de dados: %v", err)
 	}
 
 	userRepository, walletRepository, transactionRepository := setup_repositories.SetupRepositories(db)
@@ -27,5 +30,6 @@ func Setup() {
 	)
 
 	userHandler, transactionHandler := handlers.SetupHandlers(userUseCase, walletUseCase, transactionUseCase)
+
 	setup_routes.SetupRoutes(userHandler, transactionHandler)
 }
