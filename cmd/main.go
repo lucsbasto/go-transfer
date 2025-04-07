@@ -1,7 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"go-transfer/internal/config"
+	"net/http"
+)
 
 func main() {
-	fmt.Println("hello world")
+	config.Setup()
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		return
+	}
 }
