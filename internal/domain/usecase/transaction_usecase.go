@@ -9,10 +9,11 @@ import (
 )
 
 type Transaction struct {
-	userRepo            port.UserRepository
-	walletRepo          port.WalletRepository
-	transactionRepo     port.TransactionRepository
-	notificationUseCase NotificationUseCase
+	userRepo             port.UserRepository
+	walletRepo           port.WalletRepository
+	transactionRepo      port.TransactionRepository
+	notificationUseCase  NotificationUseCase
+	authorizationService port.AuthorizationService
 }
 
 func NewTransaction(
@@ -20,17 +21,22 @@ func NewTransaction(
 	walletRepo port.WalletRepository,
 	transactionRepo port.TransactionRepository,
 	notificationUseCase *NotificationUseCase,
+	authorizationService port.AuthorizationService,
 ) *Transaction {
 	return &Transaction{
-		userRepo:            userRepo,
-		walletRepo:          walletRepo,
-		transactionRepo:     transactionRepo,
-		notificationUseCase: *notificationUseCase,
+		userRepo:             userRepo,
+		walletRepo:           walletRepo,
+		transactionRepo:      transactionRepo,
+		notificationUseCase:  *notificationUseCase,
+		authorizationService: authorizationService,
 	}
 }
 
 func (t *Transaction) Execute(ctx context.Context, senderID, receiverID int64, amount float64) error {
-	const isAuthorized = true
+	isAuthorized, err := t.authorizationService.Authorize(ctx)
+	if err != nil {
+		return err
+	}
 	if !isAuthorized {
 		return errors.New("unauthorized")
 	}

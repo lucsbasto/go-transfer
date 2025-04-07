@@ -3,6 +3,8 @@ package setup_usecases
 import (
 	"fmt"
 	"go-transfer/internal/domain/usecase"
+	"go-transfer/internal/env"
+	"go-transfer/internal/infra/externals"
 	"go-transfer/internal/infra/repositories"
 )
 
@@ -13,5 +15,8 @@ func SetupTransactionUseCase(
 	notificationUseCase *usecase.NotificationUseCase,
 ) *usecase.Transaction {
 	fmt.Println("Configuring Transaction usecases...")
-	return usecase.NewTransaction(userRepo, walletRepo, transactionRepo, notificationUseCase)
+	AppConfig := env.LoadEnv()
+
+	authorizationService := externals.NewAuthorizationService(AppConfig.AuthorizationURL)
+	return usecase.NewTransaction(userRepo, walletRepo, transactionRepo, notificationUseCase, authorizationService)
 }
