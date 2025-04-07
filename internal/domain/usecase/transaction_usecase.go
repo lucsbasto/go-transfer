@@ -15,7 +15,7 @@ type Transaction struct {
 	transactionRepo      port.TransactionRepository
 	notificationUseCase  NotificationUseCase
 	authorizationService port.AuthorizationService
-	walletLocker         *sync.Map // sync.Map[int64]*sync.Mutex
+	walletLocker         *sync.Map
 }
 
 func NewTransaction(
