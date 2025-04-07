@@ -27,6 +27,5 @@ func Setup() {
 	)
 
 	userHandler, transactionHandler := handlers.SetupHandlers(userUseCase, walletUseCase, transactionUseCase)
-	setup_routes.SetupUserRoutes(userHandler)
-	setup_routes.SetupTransferRoutes(transactionHandler)
+	setup_routes.SetupRoutes(userHandler, transactionHandler)
 }
