@@ -135,7 +135,3 @@ func (t *Transaction) updateWallets(ctx context.Context, senderID, receiverID in
 
 	return nil
 }
-
-func (t *Transaction) Notify(ctx context.Context, receiverID int64, amount float64) {
-
-}
