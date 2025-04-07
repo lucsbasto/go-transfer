@@ -9,10 +9,11 @@ import (
 func SetupUseCases(
 	userRepo *repositories.UserRepository,
 	walletRepo *repositories.WalletRepository,
-) (*usecase.User, *usecase.Wallet) {
+	transactionRepo *repositories.TransactionRepository,
+) (*usecase.User, *usecase.Wallet, *usecase.Transaction) {
 	fmt.Println("Configuring usecases...")
 	userUseCase := SetupUserUseCases(userRepo)
 	walletUseCase := SetupWalletUseCases(walletRepo)
-
-	return userUseCase, walletUseCase
+	transactionRepository := SetupTransactionUseCases(userRepo, walletRepo, transactionRepo)
+	return userUseCase, walletUseCase, transactionRepository
 }

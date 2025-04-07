@@ -18,13 +18,15 @@ func Setup() {
 		return
 	}
 
-	userRepository, walletRepository := setup_repositories.SetupRepositories(db)
+	userRepository, walletRepository, transactionRepository := setup_repositories.SetupRepositories(db)
 
-	userUseCase, walletUseCase := setup_usecases.SetupUseCases(
+	userUseCase, walletUseCase, transactionUseCase := setup_usecases.SetupUseCases(
 		userRepository,
 		walletRepository,
+		transactionRepository,
 	)
 
-	userHandler := handlers.SetupHandlers(userUseCase, walletUseCase)
+	userHandler, transactionHandler := handlers.SetupHandlers(userUseCase, walletUseCase, transactionUseCase)
 	setup_routes.SetupUserRoutes(userHandler)
+	setup_routes.SetupTransferRoutes(transactionHandler)
 }

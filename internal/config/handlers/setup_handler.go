@@ -9,8 +9,10 @@ import (
 func SetupHandlers(
 	userUseCase *usecase.User,
 	walletUseCase *usecase.Wallet,
-) *api.UserHandler {
+	transactionUseCase *usecase.Transaction,
+) (*api.UserHandler, *api.TransactionHandler) {
 	fmt.Println("Configuring handlers...")
 	userHandler := SetupUserHandlers(userUseCase, walletUseCase)
-	return userHandler
+	transactionHandler := SetupTransactionHandlers(transactionUseCase)
+	return userHandler, transactionHandler
 }
