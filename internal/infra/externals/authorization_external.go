@@ -3,7 +3,9 @@ package externals
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"go-transfer/internal/domain/port"
+	"io"
 	"net/http"
 )
 
@@ -34,7 +36,12 @@ func (s *AuthorizationServiceImpl) Authorize(ctx context.Context) (bool, error) 
 	if err != nil {
 		return false, err
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			fmt.Print(err)
+		}
+	}(resp.Body)
 
 	var authResp AuthorizationResponse
 	err = json.NewDecoder(resp.Body).Decode(&authResp)
