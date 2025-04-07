@@ -9,6 +9,10 @@ import (
 	"go-transfer/internal/domain/port"
 )
 
+type NotificationUseCaseInterface interface {
+	Execute(ctx context.Context, senderID, receiverID int64, amount float64) error
+}
+
 type NotificationUseCase struct {
 	notificationRepo    port.NotificationRepository
 	notificationService port.NotificationService

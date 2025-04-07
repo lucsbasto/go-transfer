@@ -13,7 +13,7 @@ type Transaction struct {
 	userRepo             port.UserRepository
 	walletRepo           port.WalletRepository
 	transactionRepo      port.TransactionRepository
-	notificationUseCase  NotificationUseCase
+	notificationUseCase  NotificationUseCaseInterface
 	authorizationService port.AuthorizationService
 	walletLocker         *sync.Map
 }
@@ -29,7 +29,7 @@ func NewTransaction(
 		userRepo:             userRepo,
 		walletRepo:           walletRepo,
 		transactionRepo:      transactionRepo,
-		notificationUseCase:  *notificationUseCase,
+		notificationUseCase:  notificationUseCase,
 		authorizationService: authorizationService,
 		walletLocker:         &sync.Map{},
 	}
