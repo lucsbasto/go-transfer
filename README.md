@@ -39,6 +39,23 @@ O projeto adota uma arquitetura modular, separando as responsabilidades em camad
         - `repositories/` → Implementações concretas dos repositórios
 
 ---
+### 🛠️ Princípios e Padrões de Projeto
+
+- Dependency Injection (Utilizado nos Controllers e Services via construtor, promovendo Inversão de Controle)
+- Repository Pattern (Aplicado na camada de acesso a dados — ex: UserRepository, TransactionRepository, etc.)
+- Service Layer Pattern (ou Use Case Layer) (Presente na camada de lógica de negócio — ex: UserService, AuthUseCase, etc.)
+- Factory Pattern (Utilizado de forma implícita nas funções que constroem instâncias — ex: NewUserService(), NewQueueClient(), etc.)
+- Strategy Pattern (Aplicado na implementação de mensageria — ex: diferentes estratégias de envio como SQS, Kafka, HTTP)
+- YAGNI (Evita implementação de funcionalidades não necessárias — código criado apenas quando há demanda real)
+- KISS (Manutenção de lógica clara e simples, sem overengineering — funções pequenas, coesas e legíveis)
+- DRY (Reutilização de lógica através de helpers, serviços centralizados e abstrações comuns)
+- Law of Demeter (Respeitado ao evitar que uma classe acesse internals de outras diretamente — services falam com interfaces, não com implementações internas)
+- Composition over Inheritance (Uso de composição ao invés de herança — ex: injeção de dependências e uso de interfaces para comportamento dinâmico)
+- SRP (Cada módulo tem uma única responsabilidade bem definida — ex: AuthService cuida apenas de autenticação)
+- OCP (Código aberto para extensão, fechado para modificação — novos métodos ou implementações adicionados sem alterar os existentes)
+- LSP (Interfaces são substituíveis por suas implementações — ex: NotificationSender pode ser Email, SMS ou Push)
+- ISP (Interfaces pequenas e específicas — ex: Consumer, Publisher, Validator, etc.)
+- DIP (Classes de alto nível não dependem de implementações, mas de abstrações — ex: services dependendo de interfaces)
 
 ### 📋 Pré-requisitos
 
